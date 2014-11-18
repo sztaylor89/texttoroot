@@ -49,6 +49,8 @@ void Tokenizer::Tokenize(void) {
                     next = s.find_first_of(' ', current );
                     double temp =
                         atof(s.substr( current, next - current ).c_str());
+                    if(temp < 0)
+                        cout << temp << endl;
                     switch(columnNum) {
                     case(0):
                         xVals_.push_back(temp);

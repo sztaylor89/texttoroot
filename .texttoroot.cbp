@@ -2,13 +2,13 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="qdctoftoroot" />
+		<Option title="texttoroot" />
 		<Option makefile_is_custom="1" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="master">
-				<Option output="qdctoftoroot" prefix_auto="1" extension_auto="1" />
+				<Option output="texttoroot" prefix_auto="1" extension_auto="1" />
 				<Option object_output="/home/vincent/projects/c++/qdctoftoroot/.objs" />
 				<Option type="1" />
 				<Option compiler="gcc" />
