@@ -6,10 +6,6 @@ vpath %.cpp src/
 vpath %.hpp inc/
 vpath %.o obj/
 
-#Set some paths to install the shared objects to
-SO_INSTALL_PATH = /home/vincent/programs/lib
-HEADER_INSTALL_PATH = /home/vincent/programs/include
-
 #Set some of the compile options
 CXX = g++
 CINCLUDEDIRS = -Iinc
@@ -18,25 +14,22 @@ LDLIBS = -ldl -lpthread
 c++SrcSuf = cpp
 
 #Set the name of the program to be compiled
-PROGRAM = example
-VERSION = $(shell git describe --abbrev=0 --tags)
+PROGRAM = texttoroot
 
 #Define Objects
-TESTO = test.o
-PIPESO = GnuplotPipes.o
-
-#DefineSharedObject
-SO_NAME = $(subst .o,.so,lib$(PIPESO))
-SO_NAME_W_VERSION = $(addsuffix .$(VERSION),$(SO_NAME))
-SO_NAME_FULL=$(addprefix $(OBJDIR)/,$(SO_NAME_W_VERSION))
-
-#Define the name of the header for the SO
-HEADER_NAME = $(subst .o,.hpp,$(PIPESO))
+MAINO = main.o
+TOKENIZERO = Tokenizer.o
 
 #Make the object list and prefix the object directory
-OBJS = $(TESTO) $(PIPESO)
+OBJS = $(MAINO) $(TOKENIZERO)
 OBJDIR = obj
 OBJS_W_DIR = $(addprefix $(OBJDIR)/,$(OBJS))
+
+#Add the ROOT config stuff to the compilation
+ROOTCONFIG   := root-config
+CXXFLAGS     += $(shell $(ROOTCONFIG) --cflags)
+LDFLAGS      += $(shell $(ROOTCONFIG) --ldflags)
+LDLIBS       += $(shell $(ROOTCONFIG) --libs)
 
 .SUFFIXES: .$(c++SrcSuf)
 
@@ -53,8 +46,8 @@ $(PROGRAM): $(OBJS_W_DIR)
 $(OBJDIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.PHONY: clean so
-clean: 
+.PHONY: clean so doc
+clean:
 	@echo "Cleaning..."
 	@rm -f $(OBJDIR)/*.o $(PROGRAM) *~ src/*~ include/*~
 
@@ -63,3 +56,6 @@ so: $(HEADER_NAME)
 	cp $(SO_NAME_FULL) $(SO_INSTALL_PATH)
 	ln -sf $(SO_INSTALL_PATH)/$(SO_NAME_W_VERSION) $(SO_INSTALL_PATH)/$(SO_NAME)
 	cp $^ $(HEADER_INSTALL_PATH)
+
+doc: doc/doxyfile
+	@doxygen $^
