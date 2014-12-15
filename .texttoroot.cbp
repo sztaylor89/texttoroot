@@ -33,6 +33,9 @@
 		<Unit filename="README.md" />
 		<Unit filename="doc/doxyfile" />
 		<Unit filename="inc/Tokenizer.hpp" />
+		<Unit filename="scripts/makeCut.C">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="src/Tokenizer.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Extensions>

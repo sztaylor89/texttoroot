@@ -38,24 +38,21 @@ void Tokenizer::Tokenize(void) {
         cerr << "Cannot open input file. Try again, son." << endl;
     else {
         while(infile) {
-            if (isdigit(infile.peek())) {
-                string s;
-                getline(infile, s);
-                size_t current;
-                size_t next = -1;
-                int columnNum = 0;
-                do {
-                    current = next + 1;
-                    next = s.find_first_of(' ', current );
-                    double temp =
-                        atof(s.substr( current, next - current ).c_str());
-                    if(temp < 0)
-                        cout << temp << endl;
-                    switch(columnNum) {
-                    case(0):
-                        xVals_.push_back(temp);
-                        break;
-                    case(1):
+            string s;
+            getline(infile, s);
+            size_t current, next = -1;
+            int columnNum = 0;
+            do {
+                current = next + 1;
+                next = s.find_first_of(' ', current);
+                double temp =
+                    atof(s.substr( current, next - current ).c_str());
+
+                switch(columnNum) {
+                case(0):
+                    xVals_.push_back(temp);
+                    break;
+                case(1):
                         yVals_.push_back(temp);
                         break;
                     case(2):
@@ -65,9 +62,7 @@ void Tokenizer::Tokenize(void) {
                         break;
                     }
                     columnNum++;
-                } while (next != string::npos);
-            } else
-                infile.ignore(1000,'\n');
+            } while (next != string::npos);
         }
     }
 }

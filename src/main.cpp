@@ -5,8 +5,8 @@
  */
 #include <iostream>
 #include <vector>
-
 #include <TFile.h>
+
 #include <TH1D.h>
 #include <TH2D.h>
 
@@ -15,24 +15,31 @@
 using namespace std;
 
 int main(){
-//    TFile f("results/test.root", "RECREATE");
-//    TH1D *tof = new TH1D("tof", "", 6000, -1000, 1000
-//                         );
-//    TH1D *qdc = new TH1D("qdc", "", 32000, 0, 16000);
-//    TH2D *qdctof = new TH2D("qdctof", "", 4500, -500, 1000, 32000, 0, 32000);
+    TFile f("results/077cu-ban4-lower.root", "RECREATE");
+    TH1D *histTof = new TH1D("tof", "", 3000, -100, 900);
+    TH1D *histBanTof = new TH1D ("banTof", "", 1200, 0, 300);
+    TH1D *histQdc = new TH1D("qdc", "", 64000, 0, 32000);
+    TH2D *histQdcTof = new TH2D("qdctof", "", 3000, -100, 900, 32000, 0, 32000);
 
-    Tokenizer token("data/077cu-testBan1/test00.dat", " ");
-    vector<double> xVals = token.GetXVals();
-    vector<double> yVals = token.GetYVals();
+    Tokenizer tokenQdcTof("tof/077cu-testBan1/test00-tofqdc.dat", " ");
+    vector<double> fullTof = tokenQdcTof.GetXVals();
+    vector<double> qdc = tokenQdcTof.GetYVals();
+    if(fullTof.size() != qdc.size())
+        cout << "The sizes don't match" << endl;
+    for(unsigned int i = 0; i < qdc.size(); i++) {
+        histTof->Fill(fullTof.at(i));
+        histQdc->Fill(qdc.at(i));
+        histQdcTof->Fill(fullTof.at(i), qdc.at(i));
+    }
 
-//    for(unsigned int i = 0; i < yVals.size(); i++) {
-//        tof->Fill(xVals.at(i));
-//        qdc->Fill(yVals.at(i));
-//        qdctof->Fill(xVals.at(i), yVals.at(i));
-//    }
+    Tokenizer tokenBanTof("tof/077cu-ban4-lower/077cu-ban4-lower.dat", " ");
+    vector<double> banTof = tokenBanTof.GetXVals();
+    for(const auto val : banTof)
+        histBanTof->Fill(val);
 
-//    tof->Write();
-//    qdc->Write();
-//    qdctof->Write();
-//    f.Close();
+    histTof->Write();
+    histQdc->Write();
+    histBanTof->Write();
+    histQdcTof->Write();
+    f.Close();
 }
